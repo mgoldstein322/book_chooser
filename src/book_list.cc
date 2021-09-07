@@ -32,15 +32,13 @@ bool book::operator==(book& RHS){
         cin >> answer;
         if (answer == 'y' || answer == 'Y'){
             res = true;
-        } else {
-            res == false;
         }
     } else if (this->title == RHS.title && this->author == RHS.author){
         res = true;
     } else {
         res = false;
     }
-    return this->title == RHS.title && this->author == RHS.author;
+    return res;
 }
 
 /**
