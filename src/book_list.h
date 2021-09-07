@@ -5,13 +5,14 @@
 
 typedef struct book book_t;
 struct book {
-    std::string title;
-    std::string author;
+    public:
+        std::string title;
+        std::string author;
 
-    /**
-     * create struct with these two values
-     */
-    book_t(std::string title, std::string author);
+        /**
+         * create struct with these two values
+         */
+        book(std::string title, std::string author);
 };
 
 class book_list {
