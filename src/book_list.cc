@@ -1,6 +1,10 @@
 #include "book_list.h"
 
 /**
+ * create struct with empty strings
+ */
+book::book(void) : title(""), author("") {}
+/**
  * create struct with these two values
  */
 book::book(std::string title, std::string author) : title(title), author(author) {}
@@ -14,11 +18,38 @@ book book::operator=(book& RHS){
     return *this;
 }
 
+const book_t default_book;
+
 /**
  * equality operator
  */
 bool book::operator==(book& RHS){
+    using namespace std;
+    bool res = false;
+    if(this->title == RHS.title && this->author != RHS.author){
+        cout << "Is " << *this << " the same book as " << RHS << "? [y/n]" << endl;
+        char answer;
+        cin >> answer;
+        if (answer == 'y' || answer == 'Y'){
+            res = true;
+        } else {
+            res == false;
+        }
+    } else if (this->title == RHS.title && this->author == RHS.author){
+        res = true;
+    } else {
+        res = false;
+    }
     return this->title == RHS.title && this->author == RHS.author;
+}
+
+/**
+ * insertion stream operator
+ */
+std::ostream& operator<<(std::ostream& os, const book& book){
+    using namespace std;
+    cout << book.title << " by " << book.author;
+    return os;    
 }
 
 /**
@@ -34,7 +65,7 @@ book_list::book_list(const std::string path){
  * @param list1
  * @param list2
  */
-book_list::book_list(const book_list& list1, const book_list& list2){
+book_list::book_list(book_list& list1, book_list& list2){
     //
 }
 
@@ -71,5 +102,46 @@ book_list book_list::ask_which_books(book_list& partial1, book_list& partial2){
  * @return true if found
  */
 bool book_list::contains(book_t book){
+    bool res = false;
+    for(int i = 0; i < this->books.size(); i++){
+        if(books[i] == book){
+            res = true;
+            break;
+        }
+    }
+    return res;
+}
+
+/**
+ * remove a given book from the list
+ * @param book
+ */
+void remove(book_t& book){
     //
+}
+
+/**
+ * indexing operator
+ * @return copy of book at index location
+ */
+book_t& book_list::operator[](int i){
+    using namespace std;
+    if(i < 0 || i > (this->books.size() - 1)){
+        cout << "book_list index out of bounds error" << endl;
+        return const_cast<book_t&>(default_book);
+    } else {
+        return this->books[i];
+    }
+}
+
+/**
+ * insertion stream operator
+ */
+std::ostream& operator<<(std::ostream& os, const book_list& list){
+    using namespace std;
+    for(int i = 0; i < 10; i++){
+        cout << const_cast<book_list&>(list)[i] << '\n';
+    }
+    cout << flush;
+    return os;
 }

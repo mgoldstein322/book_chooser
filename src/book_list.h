@@ -10,6 +10,11 @@ struct book {
         std::string author;
 
         /**
+         * create struct with empty strings
+         */
+        book(void);
+
+        /**
          * create struct with these two values
          */
         book(std::string title, std::string author);
@@ -23,6 +28,11 @@ struct book {
          * equality operator
          */
         bool operator==(book& RHS);
+
+        /**
+         * insertion stream operator
+         */
+        friend std::ostream& operator<<(std::ostream& os, const book& book);
 };
 
 class book_list {
@@ -58,7 +68,7 @@ class book_list {
          * @param list1
          * @param list2
          */
-        book_list(const book_list& list1, const book_list& list2);
+        book_list(book_list& list1, book_list& list2);
 
         /**
          * create combined list given vector of books
@@ -71,4 +81,21 @@ class book_list {
          * @param list 
          */
         book_list(const book_list& list);
+
+        /**
+         * remove a given book from the list
+         * @param book
+         */
+        void remove(book_t& book);
+
+        /**
+         * indexing operator
+         * @return reference to book at index location
+         */
+        book_t& operator[](int i);
+
+        /**
+         * insertion stream operator
+         */
+        friend std::ostream& operator<<(std::ostream& os, const book_list& list);
 };
