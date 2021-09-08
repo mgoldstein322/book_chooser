@@ -216,7 +216,7 @@ book_t& book_list::operator[](int i){
 std::ostream& operator<<(std::ostream& os, const book_list& list){
     using namespace std;
     for(int i = 0; i < 10; i++){
-        cout << '(' << i  << ") " << const_cast<book_list&>(list)[i] << '\n';
+        cout << '(' << (i + 1) << ") " << const_cast<book_list&>(list)[i] << '\n';
     }
     cout << flush;
     return os;
