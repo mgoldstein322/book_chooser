@@ -8,6 +8,7 @@ struct book {
     public:
         std::string title;
         std::string author;
+        int rank = 0;
 
         /**
          * create struct with empty strings
@@ -27,7 +28,17 @@ struct book {
         /**
          * equality operator
          */
-        bool operator==(book& RHS);
+        bool operator==(book& RHS) const;
+
+        /**
+         * equality operator
+         */
+        bool operator==(const book& RHS) const;
+
+        /**
+         * less than operator
+         */
+        bool operator<(book& RHS) const;
 
         /**
          * insertion stream operator
@@ -40,20 +51,11 @@ class book_list {
         std::vector<book_t> books;
 
         /**
-         * given both partial lists after combining the two given lists,
-         * ask which books to keep from each list
-         * @param partial1
-         * @param partial2
-         * @return full final list
-         */
-        book_list ask_which_books(book_list& partial1, book_list& partial2);
-
-        /**
          * determine if list contains a given book
          * @param book book to find
          * @return true if found
          */
-        bool contains(book_t book);
+        bool contains(book_t& book) const;
 
     
     public:
@@ -83,10 +85,24 @@ class book_list {
         book_list(const book_list& list);
 
         /**
+         * given both partial lists after combining the two given lists,
+         * ask which books to keep from each list
+         * @param partial1
+         * @param partial2
+         */
+        void ask_which_books_to_keep(book_list& partial1, book_list& partial2);
+
+        /**
          * remove a given book from the list
          * @param book
          */
         void remove(book_t& book);
+
+        /**
+         * get size of list
+         * @return list size
+         */
+        size_t size(void) const;
 
         /**
          * indexing operator
