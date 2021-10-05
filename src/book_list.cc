@@ -33,7 +33,8 @@ const book_t default_book;
 bool book::operator==(book& RHS) const{
     using namespace std;
     bool res = false;
-    if(this->title == RHS.title && this->author != RHS.author){
+    if((this->title == RHS.title && this->author != RHS.author) || 
+    (this->title != RHS.title && this->author == RHS.author)){
         cout << "Is " << *this << " the same book as " << RHS << "? [y/n]" << endl;
         char answer;
         cin >> answer;
@@ -123,6 +124,7 @@ book_list::book_list(const std::string path){
  * @param list2
  */
 book_list::book_list(book_list& list1, book_list& list2){
+    //TODO: FIX TO NOT ASK ABOUT SAME BOOK TWICE
     using namespace std;
     book_t temp;
     // find duplicates in lists
@@ -244,7 +246,7 @@ book_t& book_list::operator[](int i){
  */
 std::ostream& operator<<(std::ostream& os, const book_list& list){
     using namespace std;
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < list.size(); i++){
         cout << '(' << (i + 1) << ") " << const_cast<book_list&>(list)[i] << '\n';
     }
     cout << flush;
