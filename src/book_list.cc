@@ -85,7 +85,36 @@ std::ostream& operator<<(std::ostream& os, const book& book){
  * @param path string to file containing list
  */
 book_list::book_list(const std::string path){
-    //
+    using namespace std;
+    // open file at path
+    ifstream file;
+    file.open(path);
+    if(file){
+        // pull in each line to parse
+        string line;
+        string delimiter(" by ");
+        while(getline(file, line)){
+            // determine if line is valid
+            int pos = line.find(delimiter);
+            if(pos != string::npos) {
+                // insert book into list
+                string title = line.substr(0, pos);
+                string author = line.substr(pos + 4);
+                book_t element(title, author);
+                this->books.push_back(element);
+            } else {
+                // exit with error
+                cout << "Book format error: write to file like \'<title> by <author>\'" << endl;
+                file.close();
+                exit(1);
+            }
+        }
+    } else {
+        cout << "File path: " << path << " is bad." << endl;
+        file.close();
+        exit(1);
+    }
+    file.close();
 }
 
 /**
