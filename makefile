@@ -6,5 +6,9 @@ debug: clean
 	mkdir build
 	cd src && g++ -g main.cc book_list.cc -o ../build/book_list
 
+debug-test: clean
+	mkdir build
+	cd src && g++ -g -DDEBUG main.cc book_list.cc -o ../build/book_list
+
 clean:
 	rm -rf build

@@ -82,6 +82,11 @@ std::ostream& operator<<(std::ostream& os, const book& book){
 }
 
 /**
+ * create empty vector
+ */
+book_list::book_list(void){}
+
+/**
  * create vector of books given a file containing a list of books
  * @param path string to file containing list
  */
@@ -124,7 +129,6 @@ book_list::book_list(const std::string path){
  * @param list2
  */
 book_list::book_list(book_list& list1, book_list& list2){
-    //TODO: FIX TO NOT ASK ABOUT SAME BOOK TWICE
     using namespace std;
     book_t temp;
     // find duplicates in lists
@@ -171,16 +175,6 @@ book_list::book_list(const book_list& list){
 }
 
 /**
- * given both partial lists after combining the two given lists,
- * ask which books to keep from each list
- * @param partial1
- * @param partial2
- */
-void book_list::ask_which_books_to_keep(book_list& partial1, book_list& partial2){
-    //
-}
-
-/**
  * determine if list contains a given book
  * @param book book to find
  * @return true if found
@@ -194,6 +188,57 @@ bool book_list::contains(book_t& book) const{
         }
     }
     return res;
+}
+
+/**
+ * print only books without a priority assigned
+*/
+void book_list::print_no_priority(void){
+    //
+}
+
+/**
+ * reset all priorities to 0
+ */
+void book_list::reset(void){
+    //
+}
+
+/**
+ * given both partial lists after combining the two given lists,
+ * ask which books to keep from each list
+ * @param partial1
+ * @param partial2
+ */
+void book_list::ask_which_books_to_keep(book_list& partial1, book_list& partial2){
+    //
+}
+
+/**
+ * determine priority for the books in this list
+ */
+void book_list::determine_priority(void){
+    using namespace std;
+    int size = this->books.size();
+    int priorities_assigned = 0;
+    while(priorities_assigned != size){
+        if (priorities_assigned == 0) {
+            cout << "Which book should have the highest priority? [1, 2, 3, ...]" << endl;
+        } else if (priorities_assigned == (size - 1)) {
+            cout << "Is this the order you want? [y/n]" << endl;
+            this->sort();
+            cout << *this << endl;
+            char response = 0;
+            cin >> response;
+            if (response == 'y' || response == 'Y') {
+                priorities_assigned++;
+            } else if (response == 'n' || response == 'N') {
+                priorities_assigned = 0;
+            }
+        } else {
+            cout << "What is the next book in priority order? [1, 2, 3, ...]" << endl;
+        }
+    }
 }
 
 /**
@@ -219,6 +264,13 @@ void book_list::remove(book_t& book){
     }
 }
 
+/** 
+ * sort books in ascending order of priority value
+ */
+void book_list::sort(void){
+    //
+}
+
 /**
  * get size of list
  * @return list size
@@ -239,6 +291,20 @@ book_t& book_list::operator[](int i){
     } else {
         return this->books[i];
     }
+}
+
+/**
+ * assignment operator
+ * @param RHS book_list being copied from
+ * @return reference to book_list after assignment
+ */
+book_list& book_list::operator=(book_list& RHS){
+    this->books.clear();
+    int size = RHS.size();
+    for(int i = 0; i < size; i++){
+        this->books.push_back(RHS[i]);
+    }
+    return *this;
 }
 
 /**

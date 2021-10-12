@@ -57,8 +57,22 @@ class book_list {
          */
         bool contains(book_t& book) const;
 
+        /**
+         * print only books without a priority assigned
+         */
+        void print_no_priority(void);
+
+        /**
+         * reset all priorities to 0
+         */
+        void reset(void);
     
     public:
+        /**
+         * create empty vector
+         */
+        book_list(void);
+
         /**
          * create vector of books given a file containing a list of books
          * @param path string to file containing list
@@ -93,10 +107,20 @@ class book_list {
         void ask_which_books_to_keep(book_list& partial1, book_list& partial2);
 
         /**
+         * determine priority for the books in this list
+         */
+        void determine_priority(void);
+
+        /**
          * remove a given book from the list
          * @param book
          */
         void remove(book_t& book);
+
+        /** 
+         * sort books in ascending order of priority value
+         */
+        void sort(void);
 
         /**
          * get size of list
@@ -109,6 +133,13 @@ class book_list {
          * @return reference to book at index location
          */
         book_t& operator[](int i);
+
+        /**
+         * assignment operator
+         * @param RHS book_list being copied from
+         * @return reference to book_list after assignment
+         */
+        book_list& operator=(book_list& RHS);
 
         /**
          * insertion stream operator
