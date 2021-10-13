@@ -60,7 +60,30 @@ class book_list {
         /**
          * print only books without a priority assigned
          */
-        void print_no_priority(void);
+        void print_no_priority(void) const;
+
+        /**
+         * mark the book with the priority
+         * @param selection number passed in by the user
+         * @param temp pointer where book will be placed
+         * @return true if nothing found
+         */
+        bool parse_selection(int selection, book_t **temp);
+
+        /**
+         * recursive call of sort - will pivot based on last index always
+         * @param low starting index
+         * @param high ending index
+         */
+        void sort_rec(int low, int high);
+
+        /**
+         * partition function to break books vector
+         * @param low starting index
+         * @param high ending index
+         * @return partition index - last index of the lower partition
+         */
+        int partition(int low, int high);
 
         /**
          * reset all priorities to 0

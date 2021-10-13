@@ -21,6 +21,8 @@ void test0(void);
 void test1(void);
 void test2(void);
 void test3(void);
+void test4(void);
+void test5(void);
 
 int main(int argc, char** argv){
     using namespace std;
@@ -33,6 +35,12 @@ int main(int argc, char** argv){
     } else if(arg_stat == PARSE_ONE_PATH) {
         // determine book priority
         arg_lists.first.determine_priority();
+        // sort in priority order
+        arg_lists.first.sort();
+
+        // TODO: determine accepatnce bands
+        int num_bands = arg_lists.first.size();
+
     } else if(arg_stat == PARSE_TWO_PATHS){
         // create combined list
         book_list combined_list0(arg_lists.first, arg_lists.second);
@@ -46,6 +54,7 @@ int main(int argc, char** argv){
     test1();
     test2();
     test3();
+    test4();
 #endif
     return 0;
 }
@@ -129,4 +138,18 @@ void test3(void){
 
     cout << "List 3:\n" << flush;
     cout << list3 << endl;
+}
+
+void test4(void){
+    using namespace std;
+
+    cout << "Test 4: Load list and determine priority and test sorting" << endl;
+
+    book_list list1("../tests/list1.txt");
+
+    list1.determine_priority();
+
+    list1.sort();
+
+    cout << list1 << endl;
 }

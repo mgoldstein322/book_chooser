@@ -15,6 +15,7 @@ book::book(std::string title, std::string author) : title(title), author(author)
 book book::operator=(book& RHS){
     this->title = RHS.title;
     this->author = RHS.author;
+    this->rank = RHS.rank;
     return *this;
 }
 
@@ -193,15 +194,102 @@ bool book_list::contains(book_t& book) const{
 /**
  * print only books without a priority assigned
 */
-void book_list::print_no_priority(void){
-    //
+void book_list::print_no_priority(void) const{
+    using namespace std;
+    int size = this->books.size();
+    int print_num = 1;
+    for (int i = 0; i < size; i++) {
+        if (this->books[i].rank == 0) {
+            cout << '(' << print_num << ')' << ' ' << this->books[i] << '\n';
+            ++print_num;
+        } else continue;
+    }
+    cout << flush;
+}
+
+/**
+ * mark the book with the priority
+ * @param selection number passed in by the user
+ * @param temp pointer where book will be placed
+ * @return true if nothing found
+ */
+bool book_list::parse_selection(int selection, book_t **temp){
+    // subtract 1 from selection to match indices more easily
+    --selection;
+    /* loop through books, counting how many books have been passed that don't have priorities set yet
+    when count matches selection, the book is found */
+    int count = 0, size = this->books.size();
+    for (int i = 0; i < size; ++i) {
+        *temp = &this->books[i];
+        if ((*temp)->rank != 0) {
+            continue;
+        } else {
+            if (count != selection) {
+                ++count;
+            } else return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * recursive call of sort
+ * @param low starting index
+ * @param high ending index
+ */
+void book_list::sort_rec(int low, int high){
+    // TODO: thoroughly test
+    if (low == high){
+        // collapse execution tree
+        return;
+    } else {
+        // divide and conquer
+        int pi = partition(low, high);
+
+        this->sort_rec(low, pi - 1);
+        this->sort_rec(pi + 1, high);
+    }
+}
+
+/**
+ * partition function to break books vector - will pivot based on last index always
+ * @param low starting index
+ * @param high ending index
+ * @return partition index - last index of the lower partition
+ */
+int book_list::partition(int low, int high){
+    // save pivot value
+    book_t pivot = this->books[high];
+    int pi = low - 1;
+
+    // iterate through array
+    for (int j = low; j < high - 1; j++) {
+        // increment pi if books[j] < pivot
+        book_t temp = this->books[j];
+        if (temp < pivot) {
+            ++pi;
+            // swap books[pi] and books[j]
+            this->books[j] = this->books[pi];
+            this->books[pi] = temp;
+        }
+    }
+    // swap the pivot value with the value at the pivot index after incrementing pi one more time
+    ++pi;
+    book_t temp = this->books[pi];
+    this->books[pi] = this->books[high];
+    this->books[high] = temp;
+
+    return pi;
 }
 
 /**
  * reset all priorities to 0
  */
 void book_list::reset(void){
-    //
+    int size = this->books.size();
+    for(int i = 0; i < size; i++){
+        this->books[i].rank = 0;
+    }
 }
 
 /**
@@ -211,7 +299,7 @@ void book_list::reset(void){
  * @param partial2
  */
 void book_list::ask_which_books_to_keep(book_list& partial1, book_list& partial2){
-    //
+    //TODO:
 }
 
 /**
@@ -222,21 +310,48 @@ void book_list::determine_priority(void){
     int size = this->books.size();
     int priorities_assigned = 0;
     while(priorities_assigned != size){
-        if (priorities_assigned == 0) {
-            cout << "Which book should have the highest priority? [1, 2, 3, ...]" << endl;
-        } else if (priorities_assigned == (size - 1)) {
+        if (priorities_assigned == (size - 1)) {
+            // mark last book with lowest priority
+            for (int i = 0; i < this->books.size(); i++) {
+                book_t &temp = this->books[i];
+                if (temp.rank == 0) {
+                    continue;
+                } else {
+                    temp.rank = ++priorities_assigned;
+                }
+            }
             cout << "Is this the order you want? [y/n]" << endl;
             this->sort();
             cout << *this << endl;
             char response = 0;
             cin >> response;
             if (response == 'y' || response == 'Y') {
-                priorities_assigned++;
+                continue;
             } else if (response == 'n' || response == 'N') {
                 priorities_assigned = 0;
             }
         } else {
-            cout << "What is the next book in priority order? [1, 2, 3, ...]" << endl;
+            // TODO: determine why priority values are so high and why the final priority is not being set
+            // determine which string to print out and print it
+            string prompt = ((priorities_assigned == 0) ? "Which book should have the highest priority? [1, 2, 3, ...]" :
+            "What is the next book in priority order? [1, 2, 3, ...]");
+            cout << prompt << endl;
+            this->print_no_priority();
+            // take input and determine validity
+            int selection;
+            cin >> selection;
+            while (selection > (this->books.size() - priorities_assigned) || selection < 1) {
+                cout << "Please choose a valid number" << endl;
+                cin >> selection;
+            }
+            // determine which book was selected
+            book_t *temp = nullptr;
+            bool result = this->parse_selection(selection, &temp);
+            if(result){
+                cout << "Selection error" << endl;
+                exit(1);
+            }
+            temp->rank = ++priorities_assigned;
         }
     }
 }
@@ -266,9 +381,10 @@ void book_list::remove(book_t& book){
 
 /** 
  * sort books in ascending order of priority value
+ * performs quicksort algorithm
  */
 void book_list::sort(void){
-    //
+    this->sort_rec(0, this->books.size() - 1);
 }
 
 /**
